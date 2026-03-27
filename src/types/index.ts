@@ -108,7 +108,7 @@ export interface Order {
   time: string
   paymentMethod: string
   status: 'pending' | 'approved' | 'canceled'
-  courierStatus: string
+  courierStatus: string | null
   // Courier tracking fields
   consignmentId?: number
   trackingCode?: string

@@ -182,7 +182,7 @@ function CheckoutContent() {
           time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
           paymentMethod: 'Cash on Delivery',
           status: 'pending' as const,
-          courierStatus: 'Processing',
+          courierStatus: null, // Will be set when order is approved and sent to courier
           subtotal: subtotalBeforeOffer,
           delivery,
           discount: totalOfferDiscount,
