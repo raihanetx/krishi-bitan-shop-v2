@@ -392,17 +392,51 @@ export default function Checkout({ setView, onConfirm, cartItems = [], deliveryC
       <div className={`chk-toast-msg ${toast.show ? 'show' : ''} ${toast.type}`}>
         <span>{toast.message}</span>
       </div>
+      
+      {/* Sticky Timer Header */}
+      <div style={{ 
+        position: 'sticky', 
+        top: 0, 
+        zIndex: 100,
+        background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
+        padding: '12px 16px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: '12px',
+        boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+      }}>
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '8px',
+          fontFamily: "'Hind Siliguri', 'Noto Sans Bengali', sans-serif"
+        }}>
+          <div style={{
+            width: '36px',
+            height: '36px',
+            borderRadius: '50%',
+            background: 'rgba(255,255,255,0.1)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <i className="ri-time-line" style={{ fontSize: '20px', color: '#fbbf24' }}></i>
+          </div>
+          <div>
+            <div style={{ fontSize: '10px', color: '#94a3b8', letterSpacing: '0.5px' }}>চেকআউটে সময় কাটাচ্ছেন</div>
+            <div style={{ fontSize: '20px', fontWeight: 700, color: '#fff', letterSpacing: '1px' }}>
+              {formatDuration(checkoutDuration)}
+            </div>
+          </div>
+        </div>
+      </div>
+      
       <div className="chk-container">
         {/* Order Summary Section - FIRST */}
         <div className="chk-section" style={{ marginBottom: '24px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
-            <div className="chk-section-header" style={{ fontFamily: "'Hind Siliguri', 'Noto Sans Bengali', sans-serif", fontSize: '20px', fontWeight: 700 }}>
-              <i className="ri-shopping-bag-3-line"></i> আপনার অর্ডার সারসংক্ষেপ
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontFamily: "'Hind Siliguri', 'Noto Sans Bengali', sans-serif", fontSize: '12px', color: '#888', background: '#f5f5f5', padding: '4px 8px', borderRadius: '12px' }}>
-              <i className="ri-time-line" style={{ fontSize: '14px' }}></i>
-              <span>{formatDuration(checkoutDuration)}</span>
-            </div>
+          <div className="chk-section-header" style={{ fontFamily: "'Hind Siliguri', 'Noto Sans Bengali', sans-serif", fontSize: '20px', fontWeight: 700, marginBottom: '16px' }}>
+            <i className="ri-shopping-bag-3-line"></i> আপনার অর্ডার সারসংক্ষেপ
           </div>
           
           {/* Total Items Summary - Clear breakdown */}
