@@ -1019,34 +1019,83 @@ const SettingsView: React.FC = () => {
         {/* ================= DELIVERY SECTION ================= */}
         {activeTab === 'delivery' && (
           <>
+          {/* Universal Delivery Toggle */}
+          <div className="mb-4 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <i className="ri-global-line text-purple-600 text-xl"></i>
+                <div>
+                  <p className="text-sm text-purple-800 font-semibold">Universal Delivery Mode</p>
+                  <p className="text-xs text-purple-600 mt-0.5">When ON, same delivery charge applies to all locations</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className={`text-sm font-medium ${isUniversalOn ? 'text-purple-700' : 'text-gray-500'}`}>
+                  {isUniversalOn ? 'ON' : 'OFF'}
+                </span>
+                <div 
+                  className={`toggle-switch ${isUniversalOn ? 'active' : ''}`}
+                  style={{ 
+                    cursor: deliveryEditing ? 'pointer' : 'not-allowed',
+                    opacity: deliveryEditing ? 1 : 0.6
+                  }}
+                  onClick={() => {
+                    if (deliveryEditing) {
+                      setIsUniversalOn(!isUniversalOn)
+                    }
+                  }}
+                />
+              </div>
+            </div>
+            {!deliveryEditing && (
+              <p className="text-xs text-purple-500 mt-2 text-right" style={{ fontFamily: "'Inter', sans-serif" }}>
+                <i className="ri-information-line mr-1"></i>
+                Click Edit to change
+              </p>
+            )}
+          </div>
+
           <table className="w-full border-collapse border border-gray-400">
             <thead>
               <tr className="bg-gray-50">
-                <th className="p-4 text-center w-1/4 font-bold border-r border-gray-400 uppercase text-xs">Inside Dhaka</th>
-                <th className="p-4 text-center w-1/4 font-bold border-r border-gray-400 uppercase text-xs">Outside Dhaka</th>
-                <th className="p-4 text-center w-1/4 font-bold border-r border-gray-400 uppercase text-xs">Free Delivery Over</th>
-                <th className="p-4 text-center w-1/4 font-bold uppercase text-xs">Action</th>
+                <th className="p-4 text-center font-bold border-r border-gray-400 uppercase text-xs" style={{ width: isUniversalOn ? '33.33%' : '22%' }}>
+                  {isUniversalOn ? 'Universal Charge' : 'Inside Dhaka'}
+                </th>
+                <th className="p-4 text-center font-bold border-r border-gray-400 uppercase text-xs" style={{ width: '22%', display: isUniversalOn ? 'none' : 'table-cell' }}>
+                  Outside Dhaka
+                </th>
+                <th className="p-4 text-center font-bold border-r border-gray-400 uppercase text-xs" style={{ width: isUniversalOn ? '33.33%' : '22%' }}>
+                  Free Delivery Over
+                </th>
+                <th className="p-4 text-center font-bold uppercase text-xs" style={{ width: '34%' }}>Action</th>
               </tr>
             </thead>
             <tbody className="border border-gray-400">
               <tr>
+                {/* Inside Dhaka OR Universal Charge */}
                 <td className="p-4 text-center border-r border-gray-400">
                   {!deliveryEditing ? (
-                    <span className="text-sm text-slate-700">TK {insideDhaka}</span>
+                    <span className="text-sm text-slate-700">
+                      TK {isUniversalOn ? universalCharge : insideDhaka}
+                    </span>
                   ) : (
                     <div className="flex items-center justify-center gap-1">
                       <span className="text-sm text-slate-700">TK</span>
                       <input 
                         type="number"
-                        value={insideDhaka}
-                        onChange={(e) => setInsideDhaka(parseInt(e.target.value) || 0)}
+                        value={isUniversalOn ? universalCharge : insideDhaka}
+                        onChange={(e) => isUniversalOn 
+                          ? setUniversalCharge(parseInt(e.target.value) || 0)
+                          : setInsideDhaka(parseInt(e.target.value) || 0)
+                        }
                         className="same-input w-12"
                         style={{ fontSize: '16px' }}
                       />
                     </div>
                   )}
                 </td>
-                <td className="p-4 text-center border-r border-gray-400">
+                {/* Outside Dhaka - hidden when Universal is ON */}
+                <td className="p-4 text-center border-r border-gray-400" style={{ display: isUniversalOn ? 'none' : 'table-cell' }}>
                   {!deliveryEditing ? (
                     <span className="text-sm text-slate-700">TK {outsideDhaka}</span>
                   ) : (
@@ -1058,10 +1107,12 @@ const SettingsView: React.FC = () => {
                         onChange={(e) => setOutsideDhaka(parseInt(e.target.value) || 0)}
                         className="same-input w-12"
                         style={{ fontSize: '16px' }}
+                        disabled={isUniversalOn}
                       />
                     </div>
                   )}
                 </td>
+                {/* Free Delivery Threshold */}
                 <td className="p-4 text-center border-r border-gray-400">
                   {!deliveryEditing ? (
                     <span className="text-sm text-slate-700">TK {freeThreshold}</span>
@@ -1123,6 +1174,18 @@ const SettingsView: React.FC = () => {
               </div>
             </div>
           </div>
+          {/* Universal Mode Info */}
+          {isUniversalOn && (
+            <div className="mt-3 p-3 bg-purple-50 border border-purple-200 rounded-lg">
+              <div className="flex items-start gap-2">
+                <i className="ri-global-line text-purple-600 text-lg"></i>
+                <div>
+                  <p className="text-sm text-purple-800 font-medium">Universal Mode Active</p>
+                  <p className="text-xs text-purple-600 mt-1">All customers will see the same delivery charge (TK {universalCharge}) regardless of location.</p>
+                </div>
+              </div>
+            </div>
+          )}
           </>
         )}
 

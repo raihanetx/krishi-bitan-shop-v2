@@ -169,7 +169,7 @@ const PageContentView: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-2 px-3 py-1.5 bg-[#f8fafc] rounded-lg">
-                  <i className="ri-text text-[#64748b] text-sm"></i>
+                  <i className="ri-file-text-line text-[#64748b] text-sm"></i>
                   <span className="text-xs text-[#64748b]">{getContent().length} characters</span>
                 </div>
               </div>
