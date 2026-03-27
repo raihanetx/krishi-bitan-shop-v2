@@ -48,8 +48,70 @@ import Offers from '@/components/offers/Offers'
 import ContentPage from '@/components/content/ContentPage'
 
 // ============================================
-// VISITOR TRACKING HELPERS
+// PERSISTENT VISITOR TRACKING
 // ============================================
+// VISITOR_ID: Persistent across browser sessions (localStorage)
+// Used to identify unique visitors (New vs Returning)
+
+const VISITOR_ID_KEY = 'ecomart_visitor_id'
+const VISITOR_FIRST_SEEN_KEY = 'ecomart_visitor_first_seen'
+
+function generateVisitorId(): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  let result = ''
+  for (let i = 0; i < 6; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  return `V-${result}`
+}
+
+function getVisitorId(): { visitorId: string; isNewVisitor: boolean } {
+  if (typeof window === 'undefined') return { visitorId: '', isNewVisitor: false }
+  
+  let visitorId = localStorage.getItem(VISITOR_ID_KEY)
+  let isNewVisitor = false
+  
+  if (!visitorId) {
+    // FIRST TIME VISITOR - Generate new persistent ID
+    visitorId = generateVisitorId()
+    localStorage.setItem(VISITOR_ID_KEY, visitorId)
+    localStorage.setItem(VISITOR_FIRST_SEEN_KEY, new Date().toISOString())
+    isNewVisitor = true
+    console.log('🆕 [VISITOR] New visitor:', visitorId)
+  } else {
+    // RETURNING VISITOR
+    console.log('🔄 [VISITOR] Returning visitor:', visitorId)
+  }
+  
+  return { visitorId, isNewVisitor }
+}
+
+// SESSION_ID: Resets when browser closes (sessionStorage)
+const SESSION_ID_KEY = 'ecomart_session_id'
+
+function generateSessionId(): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  let result = ''
+  for (let i = 0; i < 8; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  return `S-${result}`
+}
+
+function getSessionId(): string {
+  if (typeof window === 'undefined') return ''
+  
+  let sessionId = sessionStorage.getItem(SESSION_ID_KEY)
+  
+  if (!sessionId) {
+    sessionId = generateSessionId()
+    sessionStorage.setItem(SESSION_ID_KEY, sessionId)
+    console.log('📌 [SESSION] New session:', sessionId)
+  }
+  
+  return sessionId
+}
+
 function getDeviceType(): string {
   if (typeof window === 'undefined') return 'unknown'
   const ua = navigator.userAgent.toLowerCase()
@@ -78,19 +140,6 @@ function getOS(): string {
   if (/mac os/i.test(ua)) return 'macos'
   if (/linux/i.test(ua)) return 'linux'
   return 'other'
-}
-
-function getSessionId(): string {
-  if (typeof window === 'undefined') return ''
-  // Use localStorage (NOT sessionStorage) to persist visitor identity across sessions
-  // This allows us to properly identify returning visitors
-  let sid = localStorage.getItem('visitor_persistent_id')
-  if (!sid) {
-    // Generate a new persistent ID for first-time visitors
-    sid = `visitor_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`
-    localStorage.setItem('visitor_persistent_id', sid)
-  }
-  return sid
 }
 
 export default function HomeContent() {
@@ -188,17 +237,29 @@ export default function HomeContent() {
     if (typeof window === 'undefined') return
 
     const trackVisitor = async () => {
+      const { visitorId, isNewVisitor } = getVisitorId()
       const sessionId = getSessionId()
       const deviceType = getDeviceType()
       const browser = getBrowser()
       const os = getOS()
+      const today = new Date().toISOString().split('T')[0]
 
-      // Track to visitor_sessions table
+      console.log('📊 [TRACKING]', { visitorId, sessionId, isNewVisitor, deviceType, browser, os })
+
+      // Track to visitor_sessions table with visitorId
       try {
         await fetch('/api/visitors', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ sessionId, deviceType, browser, os }),
+          body: JSON.stringify({ 
+            visitorId, 
+            sessionId, 
+            deviceType, 
+            browser, 
+            os, 
+            isNewVisitor,
+            date: today 
+          }),
         })
       } catch (error) {
         console.error('Failed to track visitor:', error)
@@ -212,6 +273,7 @@ export default function HomeContent() {
           body: JSON.stringify({
             action: 'start',
             sessionId,
+            visitorId,
           }),
         })
       } catch (error) {
@@ -224,17 +286,19 @@ export default function HomeContent() {
     // Session heartbeat (every 30 seconds)
     const heartbeatInterval = setInterval(() => {
       const sessionId = getSessionId()
+      const { visitorId } = getVisitorId()
       fetch('/api/tracking/session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'heartbeat', sessionId }),
+        body: JSON.stringify({ action: 'heartbeat', sessionId, visitorId }),
       }).catch(err => console.error('Heartbeat error:', err))
     }, 30000)
 
     // Track session end on page unload
     const handleBeforeUnload = () => {
       const sessionId = getSessionId()
-      const data = JSON.stringify({ action: 'end', sessionId })
+      const { visitorId } = getVisitorId()
+      const data = JSON.stringify({ action: 'end', sessionId, visitorId })
       if (navigator.sendBeacon) {
         navigator.sendBeacon('/api/tracking/session', data)
       }

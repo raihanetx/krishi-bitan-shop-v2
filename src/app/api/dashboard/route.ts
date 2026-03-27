@@ -223,50 +223,86 @@ export async function GET(request: NextRequest) {
     // Total Visits = all session records in the period (each record = 1 visit)
     const totalVisits = allVisitorSessions.length
     
-    // Unique Visitors = distinct sessionIds (unique people/browser sessions)
-    const uniqueVisitorSet = new Set(allVisitorSessions.map(s => s.sessionId))
-    const uniqueVisitors = uniqueVisitorSet.size
+    // Unique Visitors = distinct visitorIds (PERSISTENT IDs across sessions)
+    // If no visitorId, fall back to sessionId
+    const uniqueVisitorIdSet = new Set(
+      allVisitorSessions
+        .map(s => s.visitorId || s.sessionId)
+        .filter(Boolean)
+    )
+    const uniqueVisitors = uniqueVisitorIdSet.size
     
     // ============================================
-    // NEW vs REPEAT VISITOR LOGIC (USER REQUIREMENT)
+    // NEW vs REPEAT VISITOR LOGIC
     // ============================================
-    // First-time Visitor = visited EXACTLY ONCE (total)
-    // Repeat Visitor = visited MORE THAN ONCE (total)
-    // This is based on TOTAL visit count, not period comparison
+    // Using the isNewVisitor field from database
+    // OR counting based on visitorId frequency
     
-    // Get ALL historical sessions for these visitors to count total visits
-    const allSessionsForVisitors = uniqueVisitorSet.size > 0 
-      ? await db.select({
-          sessionId: visitorSessions.sessionId,
-          date: visitorSessions.date
-        })
-          .from(visitorSessions)
-          .where(inArray(visitorSessions.sessionId, Array.from(uniqueVisitorSet)))
-      : []
-    
-    // Count total visits per sessionId from ALL historical data
-    const visitCountsBySession: Record<string, number> = {}
-    for (const session of allSessionsForVisitors) {
-      const sid = session.sessionId
-      visitCountsBySession[sid] = (visitCountsBySession[sid] || 0) + 1
-    }
-    
-    // Count New vs Repeat Visitors based on TOTAL visit count
+    // Get all sessions for these visitors to count visits
     let newVisitorsCount = 0
     let returningVisitorsCount = 0
     
-    for (const sessionId of uniqueVisitorSet) {
-      const totalVisitsForSession = visitCountsBySession[sessionId] || 0
+    // Count using isNewVisitor field first (if available)
+    const newVisitorSessions = allVisitorSessions.filter(s => s.isNewVisitor === true)
+    const returningVisitorSessions = allVisitorSessions.filter(s => s.isNewVisitor === false)
+    
+    // If we have isNewVisitor data, use it
+    if (newVisitorSessions.length > 0 || returningVisitorSessions.length > 0) {
+      // Count unique visitors by their first appearance
+      const countedVisitors = new Set<string>()
       
-      // First-time visitor = exactly 1 visit in total
-      if (totalVisitsForSession === 1) {
-        newVisitorsCount++
-      } 
-      // Repeat visitor = more than 1 visit in total
-      else {
-        returningVisitorsCount++
+      for (const session of allVisitorSessions) {
+        const vid = session.visitorId || session.sessionId
+        if (!vid || countedVisitors.has(vid)) continue
+        
+        if (session.isNewVisitor === true) {
+          newVisitorsCount++
+        } else if (session.isNewVisitor === false) {
+          returningVisitorsCount++
+        }
+        countedVisitors.add(vid)
+      }
+    } else {
+      // Fallback: Count by visitorId frequency across ALL historical data
+      const visitorIdList = Array.from(uniqueVisitorIdSet).filter(id => id && !id.startsWith('session_'))
+      
+      if (visitorIdList.length > 0) {
+        const allVisitorRecords = await db.select({
+          visitorId: visitorSessions.visitorId,
+        })
+          .from(visitorSessions)
+          .where(inArray(visitorSessions.visitorId, visitorIdList as string[]))
+        
+        // Count occurrences per visitorId
+        const visitorCounts: Record<string, number> = {}
+        for (const record of allVisitorRecords) {
+          if (record.visitorId) {
+            visitorCounts[record.visitorId] = (visitorCounts[record.visitorId] || 0) + 1
+          }
+        }
+        
+        // New = exactly 1 visit, Returning = more than 1 visit
+        for (const vid of visitorIdList) {
+          const count = visitorCounts[vid] || 0
+          if (count === 1) {
+            newVisitorsCount++
+          } else if (count > 1) {
+            returningVisitorsCount++
+          }
+        }
+      } else {
+        // No persistent visitorIds, all are "new"
+        newVisitorsCount = uniqueVisitors
+        returningVisitorsCount = 0
       }
     }
+    
+    console.log('📊 [DASHBOARD] Visitor counts:', { 
+      uniqueVisitors, 
+      newVisitorsCount, 
+      returningVisitorsCount,
+      totalVisits
+    })
 
     // Device Stats from visitorSessions
     const deviceCounts = { mobile: 0, desktop: 0, tablet: 0 }

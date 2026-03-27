@@ -299,15 +299,18 @@ export const cartEvents = pgTable('cart_events', {
 // ============================================
 export const visitorSessions = pgTable('visitor_sessions', {
   id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
-  sessionId: text('session_id').notNull(),
+  visitorId: text('visitor_id'), // PERSISTENT visitor ID (localStorage) - same across sessions
+  sessionId: text('session_id').notNull(), // Current session ID (sessionStorage) - resets on browser close
   deviceType: text('device_type').notNull(), // 'mobile', 'tablet', 'desktop'
   browser: text('browser').notNull(),
   os: text('os').notNull(),
+  isNewVisitor: boolean('is_new_visitor').default(true), // True if first time visiting
   date: text('date').notNull(), // YYYY-MM-DD format
   createdAt: timestamp('created_at').defaultNow(),
 }, (table) => [
   index('idx_visitor_sessions_date').on(table.date),
   index('idx_visitor_sessions_session_id').on(table.sessionId),
+  index('idx_visitor_sessions_visitor_id').on(table.visitorId),
 ])
 
 // ============================================
