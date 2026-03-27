@@ -372,7 +372,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({ setDashView }) => {
             className="px-4 py-2 text-sm font-medium transition-all border border-gray-300 text-gray-600 hover:border-gray-400"
             style={{ borderRadius: '5px' }}
           >
-            <i className="fa-solid fa-download mr-2"></i>
+            <i className="ri-download-line mr-2"></i>
             Export
           </button>
         </div>

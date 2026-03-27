@@ -828,7 +828,7 @@ const SettingsView: React.FC = () => {
                         className="action-btn edit"
                         style={{ background: '#f1f5f9', color: '#64748b' }}
                       >
-                        <i className="fa-solid fa-pen text-sm"></i>
+                        <i className="ri-pencil-line text-sm"></i>
                       </button>
                     </div>
                   ) : (
@@ -839,7 +839,7 @@ const SettingsView: React.FC = () => {
                         className="action-btn save"
                         style={{ background: '#16a34a', color: 'white' }}
                       >
-                        <i className="fa-solid fa-check text-sm"></i>
+                        <i className="ri-check-line text-sm"></i>
                       </button>
                       <button 
                         onClick={cancelBrandingEdit} 
@@ -847,7 +847,7 @@ const SettingsView: React.FC = () => {
                         className="action-btn cancel"
                         style={{ background: '#fee2e2', color: '#dc2626' }}
                       >
-                        <i className="fa-solid fa-xmark text-sm"></i>
+                        <i className="ri-close-line text-sm"></i>
                       </button>
                     </div>
                   )}
@@ -943,7 +943,7 @@ const SettingsView: React.FC = () => {
                           className="action-btn edit"
                           style={{ background: '#f1f5f9', color: '#64748b' }}
                         >
-                          <i className="fa-solid fa-pen text-sm"></i>
+                          <i className="ri-pencil-line text-sm"></i>
                         </button>
                       </div>
                     ) : (
@@ -954,7 +954,7 @@ const SettingsView: React.FC = () => {
                           className="action-btn save"
                           style={{ background: '#16a34a', color: 'white' }}
                         >
-                          <i className="fa-solid fa-check text-sm"></i>
+                          <i className="ri-check-line text-sm"></i>
                         </button>
                         <button 
                           onClick={cancelHeroEdit} 
@@ -962,7 +962,7 @@ const SettingsView: React.FC = () => {
                           className="action-btn cancel"
                           style={{ background: '#fee2e2', color: '#dc2626' }}
                         >
-                          <i className="fa-solid fa-xmark text-sm"></i>
+                          <i className="ri-close-line text-sm"></i>
                         </button>
                       </div>
                     )}
@@ -975,7 +975,7 @@ const SettingsView: React.FC = () => {
             {uploadingHero && (
               <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                 <div className="flex items-center gap-3">
-                  <i className="fa-solid fa-spinner fa-spin text-blue-500"></i>
+                  <i className="ri-loader-4-line animate-spin text-blue-500"></i>
                   <span className="text-sm text-blue-700 font-medium">
                     Uploading image {uploadProgress.current} of {uploadProgress.total}...
                   </span>
@@ -1137,7 +1137,7 @@ const SettingsView: React.FC = () => {
                         className="action-btn edit"
                         style={{ background: '#f1f5f9', color: '#64748b' }}
                       >
-                        <i className="fa-solid fa-pen text-sm"></i>
+                        <i className="ri-pencil-line text-sm"></i>
                       </button>
                     </div>
                   ) : (
@@ -1148,7 +1148,7 @@ const SettingsView: React.FC = () => {
                         className="action-btn save"
                         style={{ background: '#16a34a', color: 'white' }}
                       >
-                        <i className="fa-solid fa-check text-sm"></i>
+                        <i className="ri-check-line text-sm"></i>
                       </button>
                       <button 
                         onClick={cancelDeliveryEdit} 
@@ -1156,7 +1156,7 @@ const SettingsView: React.FC = () => {
                         className="action-btn cancel"
                         style={{ background: '#fee2e2', color: '#dc2626' }}
                       >
-                        <i className="fa-solid fa-xmark text-sm"></i>
+                        <i className="ri-close-line text-sm"></i>
                       </button>
                     </div>
                   )}
@@ -1267,7 +1267,7 @@ const SettingsView: React.FC = () => {
                         className="action-btn edit"
                         style={{ background: '#f1f5f9', color: '#64748b' }}
                       >
-                        <i className="fa-solid fa-pen text-sm"></i>
+                        <i className="ri-pencil-line text-sm"></i>
                       </button>
                     </div>
                   ) : (
@@ -1278,7 +1278,7 @@ const SettingsView: React.FC = () => {
                         className="action-btn save"
                         style={{ background: '#16a34a', color: 'white' }}
                       >
-                        <i className="fa-solid fa-check text-sm"></i>
+                        <i className="ri-check-line text-sm"></i>
                       </button>
                       <button 
                         onClick={cancelSocialEdit} 
@@ -1286,7 +1286,7 @@ const SettingsView: React.FC = () => {
                         className="action-btn cancel"
                         style={{ background: '#fee2e2', color: '#dc2626' }}
                       >
-                        <i className="fa-solid fa-xmark text-sm"></i>
+                        <i className="ri-close-line text-sm"></i>
                       </button>
                     </div>
                   )}
@@ -1405,7 +1405,7 @@ const SettingsView: React.FC = () => {
                                 style={{ background: '#16a34a', color: 'white' }}
                                 title="Save"
                               >
-                                <i className="fa-solid fa-check text-sm"></i>
+                                <i className="ri-check-line text-sm"></i>
                               </button>
                               <button
                                 onClick={cancelSectionEdit}
@@ -1414,7 +1414,7 @@ const SettingsView: React.FC = () => {
                                 style={{ background: '#fee2e2', color: '#dc2626' }}
                                 title="Cancel"
                               >
-                                <i className="fa-solid fa-xmark text-sm"></i>
+                                <i className="ri-close-line text-sm"></i>
                               </button>
                             </>
                           ) : (
@@ -1425,7 +1425,7 @@ const SettingsView: React.FC = () => {
                               style={{ background: '#f1f5f9', color: '#64748b' }}
                               title="Edit"
                             >
-                              <i className="fa-solid fa-pen text-sm"></i>
+                              <i className="ri-pencil-line text-sm"></i>
                             </button>
                           )}
                         </div>

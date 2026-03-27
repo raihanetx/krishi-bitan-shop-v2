@@ -74,7 +74,7 @@ const CredentialsView: React.FC = () => {
       id: 1, 
       type: 'admin', 
       label: 'Admin Username', 
-      icon: 'fa-user', 
+      icon: 'ri-user-line', 
       timestampKey: 'adminUsernameUpdatedAt',
       fieldKey: 'adminUsername',
       required: true,
@@ -84,7 +84,7 @@ const CredentialsView: React.FC = () => {
       id: 2, 
       type: 'admin', 
       label: 'Admin Password', 
-      icon: 'fa-lock', 
+      icon: 'ri-lock-line', 
       timestampKey: 'adminPasswordUpdatedAt',
       fieldKey: 'adminPassword',
       hasKey: 'hasAdminPassword',
@@ -96,7 +96,7 @@ const CredentialsView: React.FC = () => {
       id: 3, 
       type: 'courier', 
       label: 'Steadfast API Key', 
-      icon: 'fa-key', 
+      icon: 'ri-key-2-line', 
       timestampKey: 'steadfastApiUpdatedAt',
       fieldKey: 'steadfastApiKey',
       hasKey: 'hasSteadfastApiKey',
@@ -106,7 +106,7 @@ const CredentialsView: React.FC = () => {
       id: 4, 
       type: 'courier', 
       label: 'Steadfast Secret Key', 
-      icon: 'fa-shield-halved', 
+      icon: 'ri-shield-keyhole-line', 
       timestampKey: 'steadfastApiUpdatedAt',
       fieldKey: 'steadfastSecretKey',
       hasKey: 'hasSteadfastSecretKey',
@@ -116,7 +116,7 @@ const CredentialsView: React.FC = () => {
       id: 5, 
       type: 'courier', 
       label: 'Steadfast Webhook URL', 
-      icon: 'fa-link', 
+      icon: 'ri-link', 
       timestampKey: 'steadfastApiUpdatedAt',
       fieldKey: 'steadfastWebhookUrl',
       isSensitive: false
@@ -126,7 +126,7 @@ const CredentialsView: React.FC = () => {
       id: 6, 
       type: 'cloudinary', 
       label: 'Cloudinary Cloud Name', 
-      icon: 'fa-cloud', 
+      icon: 'ri-cloud-line', 
       timestampKey: 'cloudinaryUpdatedAt',
       fieldKey: 'cloudinaryCloudName',
       isSensitive: false
@@ -135,7 +135,7 @@ const CredentialsView: React.FC = () => {
       id: 7, 
       type: 'cloudinary', 
       label: 'Cloudinary API Key', 
-      icon: 'fa-key', 
+      icon: 'ri-key-2-line', 
       timestampKey: 'cloudinaryUpdatedAt',
       fieldKey: 'cloudinaryApiKey',
       isSensitive: false
@@ -144,7 +144,7 @@ const CredentialsView: React.FC = () => {
       id: 8, 
       type: 'cloudinary', 
       label: 'Cloudinary API Secret', 
-      icon: 'fa-user-secret', 
+      icon: 'ri-user-settings-line', 
       timestampKey: 'cloudinaryUpdatedAt',
       fieldKey: 'cloudinaryApiSecret',
       hasKey: 'hasCloudinaryApiSecret',
@@ -455,12 +455,12 @@ const CredentialsView: React.FC = () => {
             >
               {testing ? (
                 <>
-                  <i className="fa-solid fa-spinner spinner mr-2"></i>
+                  <i className="ri-loader-4-line animate-spin mr-2"></i>
                   Testing...
                 </>
               ) : (
                 <>
-                  <i className="fa-solid fa-plug mr-2"></i>
+                  <i className="ri-plug-line mr-2"></i>
                   Test Connection
                 </>
               )}
@@ -492,7 +492,7 @@ const CredentialsView: React.FC = () => {
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-4">
                         <div className="w-8 h-8 border border-slate-200 rounded-full flex items-center justify-center text-slate-400">
-                          <i className={`fa-solid text-[10px] ${cred.icon}`}></i>
+                          <i className={`${cred.icon} text-[10px]`}></i>
                         </div>
                         <div className="flex flex-col">
                           <span className="text-sm font-medium text-slate-700">{cred.label}</span>
@@ -545,7 +545,7 @@ const CredentialsView: React.FC = () => {
                             disabled={saving || !editValue.trim()}
                             title="Save"
                           >
-                            <i className="fa-solid fa-check text-sm"></i>
+                            <i className="ri-check-line text-sm"></i>
                           </button>
                           <button 
                             onClick={cancelEdit} 
@@ -554,7 +554,7 @@ const CredentialsView: React.FC = () => {
                             disabled={saving}
                             title="Cancel"
                           >
-                            <i className="fa-solid fa-xmark text-sm"></i>
+                            <i className="ri-close-line text-sm"></i>
                           </button>
                         </div>
                       ) : (
@@ -566,7 +566,7 @@ const CredentialsView: React.FC = () => {
                             disabled={saving}
                             title="Edit"
                           >
-                            <i className="fa-solid fa-pen text-sm"></i>
+                            <i className="ri-pencil-line text-sm"></i>
                           </button>
                         </div>
                       )}
@@ -581,7 +581,7 @@ const CredentialsView: React.FC = () => {
         {/* Status Info */}
         {saving && (
           <div className="mt-4 text-center text-sm text-slate-400">
-            <i className="fa-solid fa-spinner fa-spin mr-2"></i>
+            <i className="ri-loader-4-line animate-spin mr-2"></i>
             Saving...
           </div>
         )}
