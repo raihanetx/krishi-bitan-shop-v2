@@ -419,7 +419,7 @@ export default function ProductDetail({ setView, addToCart }: ProductDetailProps
         <div className="flex flex-col w-full">
           <div className="flex-grow relative w-full bg-transparent rounded-2xl overflow-hidden border border-gray-200 h-[280px] md:h-[350px]">
             {hasDiscount && discountBadgeText && (
-              <div className="absolute top-3 left-3 bg-red-600 text-white text-[9px] font-bold px-2 py-0.5 rounded z-10">
+              <div className="absolute top-0 left-0 bg-[#ff4757] text-white text-[10px] font-bold px-2 py-0.5 rounded-br-lg z-10">
                 {discountBadgeText}
               </div>
             )}
