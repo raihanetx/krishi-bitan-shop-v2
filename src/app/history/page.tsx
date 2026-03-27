@@ -13,16 +13,28 @@ function HistoryContent() {
   const [showPhoneInput, setShowPhoneInput] = useState(false)
   const [phoneInput, setPhoneInput] = useState('')
   const [localLoading, setLocalLoading] = useState(true)
+  const [hydrated, setHydrated] = useState(false)
   
   // Handle navigation
   const handleNavigate = useCallback(() => {
     navigate('shop')
   }, [navigate])
 
-  // Check for phone in URL params or localStorage on mount
+  // Wait for hydration
   useEffect(() => {
+    // Small delay to ensure zustand persist has loaded
+    const timer = setTimeout(() => {
+      setHydrated(true)
+    }, 100)
+    return () => clearTimeout(timer)
+  }, [])
+
+  // Check for phone and fetch orders when hydrated
+  useEffect(() => {
+    if (!hydrated) return
+    
     const checkAndFetch = async () => {
-      // Check URL params for phone
+      // Check URL params for phone first
       const urlParams = new URLSearchParams(window.location.search)
       const urlPhone = urlParams.get('phone')
       
@@ -34,6 +46,7 @@ function HistoryContent() {
         return
       }
       
+      // Check store for customerPhone (from persist)
       if (customerPhone) {
         // Have phone in storage - fetch fresh from server
         console.log('Phone found in storage:', customerPhone)
@@ -42,13 +55,14 @@ function HistoryContent() {
         return
       }
       
-      // No phone - show input
+      // No phone anywhere - show input
+      console.log('No phone found, showing input')
       setShowPhoneInput(true)
       setLocalLoading(false)
     }
     
     checkAndFetch()
-  }, [])
+  }, [hydrated, customerPhone, fetchOrdersFromServer])
 
   // Handle phone submit
   const handlePhoneSubmit = async (e: React.FormEvent) => {
@@ -67,11 +81,17 @@ function HistoryContent() {
 
   // Handle refresh
   const handleRefresh = async () => {
-    await refreshOrders()
+    const urlParams = new URLSearchParams(window.location.search)
+    const urlPhone = urlParams.get('phone')
+    const phoneToUse = urlPhone || customerPhone
+    
+    if (phoneToUse) {
+      await fetchOrdersFromServer(phoneToUse)
+    }
   }
 
   // Loading state
-  if (localLoading || isLoading) {
+  if (!hydrated || localLoading || isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center" style={{ fontFamily: "'Hind Siliguri', 'Noto Sans Bengali', sans-serif" }}>
         <div className="text-center">
