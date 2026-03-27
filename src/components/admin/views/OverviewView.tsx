@@ -412,9 +412,6 @@ export const OverviewView: React.FC<OverviewViewProps> = ({ setDashView }) => {
           <table className="ledger-table">
             <thead>
               <tr>
-                <th className="w-[14.2%]">Total Visitors</th>
-                <th className="w-[14.2%]">New Visitors</th>
-                <th className="w-[14.2%]">Repeat Visitors</th>
                 <th className="w-[14.2%]">Conv. Rate (CR%)</th>
                 <th className="w-[14.2%]">Bounce Rate</th>
                 <th className="w-[14.2%]">Avg Session Time</th>
@@ -423,9 +420,6 @@ export const OverviewView: React.FC<OverviewViewProps> = ({ setDashView }) => {
             </thead>
             <tbody>
               <tr className="font-bold text-gray-900">
-                <td className="text-purple-700">{formatNum(active.unique)}</td>
-                <td className="text-emerald-600">{formatNum(active.newVisitors)}</td>
-                <td className="text-blue-700">{formatNum(active.returning)}</td>
                 <td className="text-emerald-700">{active.conv}%</td>
                 <td className="text-red-400">{active.bounce}%</td>
                 <td className="text-gray-500">{active.duration}</td>
@@ -433,6 +427,68 @@ export const OverviewView: React.FC<OverviewViewProps> = ({ setDashView }) => {
               </tr>
             </tbody>
           </table>
+        </div>
+        
+        {/* Visitor Tree - Hierarchical Display */}
+        <div className="mb-2 mt-4">
+          <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Visitor Breakdown (Tree View)</h3>
+        </div>
+        <div className="ledger-container p-0">
+          <div className="flex flex-col">
+            {/* Root: Total Visitors */}
+            <div className="flex items-center p-4 bg-gradient-to-r from-purple-50 to-purple-100 border-b-2 border-purple-200">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center">
+                  <i className="ri-group-line text-white text-lg"></i>
+                </div>
+                <div>
+                  <span className="text-[11px] text-purple-500 uppercase font-bold tracking-wider">মোট ভিজিটর</span>
+                  <div className="text-2xl font-black text-purple-700">{formatNum(active.unique)}</div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Branch Container */}
+            <div className="flex">
+              {/* First-time Visitors Branch */}
+              <div className="flex-1 p-4 bg-gradient-to-br from-emerald-50 to-green-100 border-r border-gray-200">
+                <div className="flex flex-col items-center text-center">
+                  {/* Connector Line */}
+                  <div className="w-px h-4 bg-emerald-300 mb-2"></div>
+                  <div className="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center mb-2">
+                    <i className="ri-user-add-line text-white text-xl"></i>
+                  </div>
+                  <span className="text-[10px] text-emerald-500 uppercase font-bold tracking-wider">প্রথমবার ভিজিট</span>
+                  <div className="text-2xl font-black text-emerald-600 mt-1">{formatNum(active.newVisitors)}</div>
+                  <span className="text-[11px] text-emerald-400 mt-1">১ বার এসেছে</span>
+                  <div className="mt-2 px-3 py-1 bg-emerald-200 rounded-full">
+                    <span className="text-[11px] font-bold text-emerald-700">
+                      {active.unique > 0 ? Math.round((active.newVisitors / active.unique) * 100) : 0}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Repeat Visitors Branch */}
+              <div className="flex-1 p-4 bg-gradient-to-br from-blue-50 to-indigo-100">
+                <div className="flex flex-col items-center text-center">
+                  {/* Connector Line */}
+                  <div className="w-px h-4 bg-blue-300 mb-2"></div>
+                  <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center mb-2">
+                    <i className="ri-user-follow-line text-white text-xl"></i>
+                  </div>
+                  <span className="text-[10px] text-blue-500 uppercase font-bold tracking-wider">রিপিট ভিজিট</span>
+                  <div className="text-2xl font-black text-blue-600 mt-1">{formatNum(active.returning)}</div>
+                  <span className="text-[11px] text-blue-400 mt-1">একাধিক বার এসেছে</span>
+                  <div className="mt-2 px-3 py-1 bg-blue-200 rounded-full">
+                    <span className="text-[11px] font-bold text-blue-700">
+                      {active.unique > 0 ? Math.round((active.returning / active.unique) * 100) : 0}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* 03. MOST SELLING */}
