@@ -377,6 +377,12 @@ export default function Checkout({ setView, onConfirm, cartItems = [], deliveryC
           <div className="chk-section-header" style={{ fontFamily: "'Hind Siliguri', 'Noto Sans Bengali', sans-serif", fontSize: '20px', fontWeight: 700, marginBottom: '16px' }}>
             <i className="ri-shopping-bag-3-line"></i> আপনার অর্ডার সারসংক্ষেপ
           </div>
+          
+          {/* Total Items Summary */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px', fontFamily: "'Hind Siliguri', 'Noto Sans Bengali', sans-serif" }}>
+            <span style={{ fontSize: '13px', color: '#666' }}>মোট {cartItems.length} টা আইটেম</span>
+            <span style={{ fontSize: '12px', color: '#999' }}>(পরিমাণ: {cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0)})</span>
+          </div>
         
           {cartItems.length > 0 ? (
             cartItems.map((item, index) => {
